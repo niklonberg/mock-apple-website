@@ -1,13 +1,9 @@
-import React from 'react';
 import { appleImg, bagImg, searchImg } from '../utils';
 
 const Navbar = () => {
   return (
-    <header
-      className="w-full flex items-center justify-between
-     py-6 px-5 sm:px-10"
-    >
-      <nav className="w-full screen-max-width flex">
+    <header className="flex w-full items-center justify-between px-5 py-6 sm:px-10">
+      <nav className="screen-max-width flex w-full">
         <img src={appleImg} alt="apple logo" width={24} />
 
         <ul>
