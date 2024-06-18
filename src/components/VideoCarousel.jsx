@@ -13,13 +13,14 @@ const VideoCarousel = () => {
   const videoSpanRef = React.useRef([]);
   const [video, setVideo] = React.useState({
     hasEnded: false,
+    startPlay: false,
     videoId: 0,
     isLastVideo: false,
     isPlaying: false,
   });
   const [loadedData, setLoadedData] = React.useState([]);
 
-  const { hasEnded, videoId, isLastVideo, isPlaying } = video;
+  const { hasEnded, startPlay, videoId, isLastVideo, isPlaying } = video;
 
   useGSAP(() => {
     // slider animation, moves finished video out, and new video in
@@ -37,6 +38,7 @@ const VideoCarousel = () => {
       onComplete: () => {
         setVideo((prevVideo) => ({
           ...prevVideo,
+          startPlay: true,
           isPlaying: true,
         }));
       },
@@ -48,10 +50,10 @@ const VideoCarousel = () => {
       if (!isPlaying) {
         videoRef.current[videoId].pause();
       } else {
-        isPlaying && videoRef.current[videoId].play();
+        startPlay && videoRef.current[videoId].play();
       }
     }
-  }, [videoId, isPlaying, loadedData]);
+  }, [startPlay, videoId, isPlaying, loadedData]);
 
   const handleLoadedMetadata = (i, e) => setLoadedData((prevData) => [...prevData, e]);
 
@@ -66,8 +68,7 @@ const VideoCarousel = () => {
         onUpdate: () => {
           // get the progress percentage
           const progressPercent = Math.ceil(anim.progress() * 100);
-          console.log(anim.progress());
-          if (progressPercent !== currentProgress) {
+          if (progressPercent > currentProgress) {
             // update the progress percentage
             currentProgress = progressPercent;
             // update the width of the progress bar
@@ -103,7 +104,7 @@ const VideoCarousel = () => {
 
       const animUpdate = () => {
         const video = videoRef.current[videoId];
-        if (video) anim.progress(video.currentTime / video.duration);
+        anim.progress(video.currentTime / video.duration);
       };
 
       if (isPlaying) {
@@ -112,7 +113,7 @@ const VideoCarousel = () => {
         gsap.ticker.remove(animUpdate);
       }
     }
-  }, [videoId, isPlaying]);
+  }, [videoId, startPlay]);
 
   const handleVideoProcess = (type, i) => {
     switch (type) {
