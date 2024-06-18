@@ -37,6 +37,13 @@ const Hero = () => {
           </video>
         </div>
       </div>
+
+      <div id="cta" className="translate-y-30 flex flex-col items-center">
+        <a href="#highlights" className="btn">
+          Buy
+        </a>
+        <p>From $199/month or $999</p>
+      </div>
     </section>
   );
 };
