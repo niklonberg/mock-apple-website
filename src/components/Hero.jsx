@@ -29,7 +29,7 @@ const Hero = () => {
       delay: 2,
       duration: 1,
       opacity: 1,
-      y: -50,
+      y: -100,
     });
   }, []);
 
