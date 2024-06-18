@@ -21,6 +21,11 @@ const VideoCarousel = () => {
   const { hasEnded, startPlaying, videoId, isLastVideo, isPlaying } = video;
 
   useGSAP(() => {
+    gsap.to('.slider', {
+      transform: `translateX(${-100 * videoId}%)`,
+      duration: 2,
+      ease: 'power2.inOut',
+    });
     gsap.to('.slide-video', {
       scrollTrigger: {
         trigger: '.slide-video',
@@ -49,15 +54,51 @@ const VideoCarousel = () => {
   const handleLoadedMetadata = (i, e) => setLoadedData((prevData) => [...prevData, e]);
 
   React.useEffect(() => {
-    const currentProgress = 0;
+    let currentProgress = 0;
     let span = videoSpanRef.current;
 
     if (span[videoId]) {
-      // animate the progress of the video
       let anim = gsap.to(span[videoId], {
-        onUpdate: () => {},
-        onComplete: () => {},
+        onUpdate: () => {
+          const progressPercent = Math.ceil(anim.progress() * 100);
+          if (progressPercent !== currentProgress) {
+            currentProgress = progressPercent;
+
+            gsap.to(videoDivRef.current[videoId], {
+              width: window.innerWidth < 760 ? '10vw' : window.innerWidth < 1200 ? '10vw' : '4vw',
+            });
+
+            gsap.to(span[videoId], {
+              width: `${currentProgress}%`,
+              backgroundColor: 'white',
+            });
+          }
+        },
+        onComplete: () => {
+          if (isPlaying) {
+            gsap.to(videoDivRef.current[videoId], {
+              width: '12px',
+            });
+            gsap.to(span[videoId], {
+              backgroundColor: '#afafaf',
+            });
+          }
+        },
       });
+
+      if (videoId === 0) {
+        anim.restart();
+      }
+
+      const animUpdate = () => {
+        anim.progress(videoRef.current[videoId].currentTime / hightlightsSlides[videoId].videoDuration);
+      };
+
+      if (isPlaying) {
+        gsap.ticker.add(animUpdate);
+      } else {
+        gsap.ticker.remove(animUpdate);
+      }
     }
   }, [videoId, startPlaying]);
 
@@ -93,6 +134,13 @@ const VideoCarousel = () => {
         }));
         break;
 
+      case 'video-pause':
+        setVideo((prevVideo) => ({
+          ...prevVideo,
+          isPlaying: !isPlaying,
+        }));
+        break;
+
       default:
         return video;
     }
@@ -100,6 +148,7 @@ const VideoCarousel = () => {
 
   return (
     <>
+      {/* container for videos */}
       <div className="flex items-center">
         {hightlightsSlides.map((slide, i) => (
           <div key={slide.id} className="slider pr-10 sm:pr-20">
@@ -111,6 +160,7 @@ const VideoCarousel = () => {
                   preload="auto"
                   muted
                   ref={(el) => (videoRef.current[i] = el)}
+                  onEnded={() => (i !== 3 ? handleVideoProcess('video-end', i) : handleVideoProcess('video-last'))}
                   onPlay={() => {
                     setVideo((prevVideo) => ({ ...prevVideo, isPlaying: true }));
                   }}
@@ -131,16 +181,17 @@ const VideoCarousel = () => {
         ))}
       </div>
 
+      {/* container for video progress */}
       <div className="flex-center relative mt-10">
         <div className="flex-center rounded-full bg-gray-300 px-7 py-5 backdrop-blur">
           {videoRef.current.map((_, i) => (
-            <span
+            <div
               key={i}
               ref={(el) => (videoDivRef.current[i] = el)}
-              className="mx-2 h-3 w-3 cursor-pointer rounded-full bg-gray-200"
+              className="relative mx-2 h-3 w-3 cursor-pointer rounded-full bg-gray-200"
             >
-              <span className="absolute h-full w-full rounded-full" ref={(el) => (videoSpanRef.current[i] = el)}></span>
-            </span>
+              <span className="absolute h-full w-full rounded-full" ref={(el) => (videoSpanRef.current[i] = el)} />
+            </div>
           ))}
         </div>
 
