@@ -13,14 +13,13 @@ const VideoCarousel = () => {
   const videoSpanRef = React.useRef([]);
   const [video, setVideo] = React.useState({
     hasEnded: false,
-    startPlaying: false,
     videoId: 0,
     isLastVideo: false,
     isPlaying: false,
   });
   const [loadedData, setLoadedData] = React.useState([]);
 
-  const { hasEnded, startPlaying, videoId, isLastVideo, isPlaying } = video;
+  const { hasEnded, videoId, isLastVideo, isPlaying } = video;
 
   useGSAP(() => {
     // slider animation, moves finished video out, and new video in
@@ -38,7 +37,6 @@ const VideoCarousel = () => {
       onComplete: () => {
         setVideo((prevVideo) => ({
           ...prevVideo,
-          startPlaying: true,
           isPlaying: true,
         }));
       },
@@ -50,10 +48,10 @@ const VideoCarousel = () => {
       if (!isPlaying) {
         videoRef.current[videoId].pause();
       } else {
-        startPlaying && videoRef.current[videoId].play();
+        isPlaying && videoRef.current[videoId].play();
       }
     }
-  }, [startPlaying, videoId, isPlaying, loadedData]);
+  }, [videoId, isPlaying, loadedData]);
 
   const handleLoadedMetadata = (i, e) => setLoadedData((prevData) => [...prevData, e]);
 
@@ -114,7 +112,7 @@ const VideoCarousel = () => {
         gsap.ticker.remove(animUpdate);
       }
     }
-  }, [videoId, startPlaying, isPlaying]);
+  }, [videoId, isPlaying]);
 
   const handleVideoProcess = (type, i) => {
     switch (type) {
