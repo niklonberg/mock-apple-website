@@ -1,13 +1,16 @@
 import React from 'react';
 import { hightlightsSlides } from '../constants';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/all';
 import { pauseImg, playImg, replayImg } from '../utils';
 import { useGSAP } from '@gsap/react';
 
+gsap.registerPlugin(ScrollTrigger);
+
 const VideoCarousel = () => {
   const videoRef = React.useRef([]);
-  const videoSpanRef = React.useRef([]);
   const videoDivRef = React.useRef([]);
+  const videoSpanRef = React.useRef([]);
   const [video, setVideo] = React.useState({
     hasEnded: false,
     startPlaying: false,
@@ -15,17 +18,18 @@ const VideoCarousel = () => {
     isLastVideo: false,
     isPlaying: false,
   });
-
   const [loadedData, setLoadedData] = React.useState([]);
 
   const { hasEnded, startPlaying, videoId, isLastVideo, isPlaying } = video;
 
   useGSAP(() => {
+    // slider animation, moves finished video out, and new video in
     gsap.to('.slider', {
       transform: `translateX(${-100 * videoId}%)`,
       duration: 2,
       ease: 'power2.inOut',
     });
+    // video animation to play the current video when it is in view. Triggered by scroll
     gsap.to('.slide-video', {
       scrollTrigger: {
         trigger: '.slide-video',
@@ -42,7 +46,7 @@ const VideoCarousel = () => {
   }, [hasEnded, videoId]);
 
   React.useEffect(() => {
-    if (loadedData.length > 3) {
+    if (loadedData.length === hightlightsSlides.length) {
       if (!isPlaying) {
         videoRef.current[videoId].pause();
       } else {
@@ -53,34 +57,43 @@ const VideoCarousel = () => {
 
   const handleLoadedMetadata = (i, e) => setLoadedData((prevData) => [...prevData, e]);
 
+  // keep track of video progress
   React.useEffect(() => {
     let currentProgress = 0;
     let span = videoSpanRef.current;
 
     if (span[videoId]) {
+      // animate the progress bar
       let anim = gsap.to(span[videoId], {
         onUpdate: () => {
+          // get the progress percentage
           const progressPercent = Math.ceil(anim.progress() * 100);
+          console.log(anim.progress());
           if (progressPercent !== currentProgress) {
+            // update the progress percentage
             currentProgress = progressPercent;
-
+            // update the width of the progress bar
             gsap.to(videoDivRef.current[videoId], {
-              width: window.innerWidth < 760 ? '10vw' : window.innerWidth < 1200 ? '10vw' : '4vw',
+              width:
+                window.innerWidth < 1200
+                  ? '10vw' // tablet & mobile
+                  : '5vw', // desktop
             });
-
+            // update the background color of the progress bar
             gsap.to(span[videoId], {
               width: `${currentProgress}%`,
               backgroundColor: 'white',
             });
           }
         },
+        // when the video ends replace the progress bar with a small dot and change background color
         onComplete: () => {
           if (isPlaying) {
             gsap.to(videoDivRef.current[videoId], {
               width: '12px',
             });
             gsap.to(span[videoId], {
-              backgroundColor: '#afafaf',
+              backgroundColor: '#7A7A7A',
             });
           }
         },
@@ -91,7 +104,8 @@ const VideoCarousel = () => {
       }
 
       const animUpdate = () => {
-        anim.progress(videoRef.current[videoId].currentTime / hightlightsSlides[videoId].videoDuration);
+        const video = videoRef.current[videoId];
+        if (video) anim.progress(video.currentTime / video.duration);
       };
 
       if (isPlaying) {
@@ -100,7 +114,7 @@ const VideoCarousel = () => {
         gsap.ticker.remove(animUpdate);
       }
     }
-  }, [videoId, startPlaying]);
+  }, [videoId, startPlaying, isPlaying]);
 
   const handleVideoProcess = (type, i) => {
     switch (type) {
@@ -155,12 +169,16 @@ const VideoCarousel = () => {
             <div className="video-carousel-container">
               <div className="flex-center h-full overflow-hidden rounded-3xl bg-black">
                 <video
-                  className="slide-video"
+                  className={`slide-video ${slide.id === 2 && 'translate-x-44'} pointer-events-none`}
                   playsInline={true}
                   preload="auto"
                   muted
                   ref={(el) => (videoRef.current[i] = el)}
-                  onEnded={() => (i !== 3 ? handleVideoProcess('video-end', i) : handleVideoProcess('video-last'))}
+                  onEnded={() =>
+                    i < hightlightsSlides.length - 1
+                      ? handleVideoProcess('video-end', i)
+                      : handleVideoProcess('video-last')
+                  }
                   onPlay={() => {
                     setVideo((prevVideo) => ({ ...prevVideo, isPlaying: true }));
                   }}
