@@ -6,6 +6,19 @@ import { heroVideo, smallHeroVideo } from '../utils';
 const Hero = () => {
   const [videoSrc, setVideoSrc] = React.useState(window.innerWidth < 760 ? smallHeroVideo : heroVideo);
 
+  function handleVideoSrc() {
+    if (window.innerWidth < 760) {
+      setVideoSrc(smallHeroVideo);
+    } else {
+      setVideoSrc(heroVideo);
+    }
+  }
+
+  React.useEffect(() => {
+    window.addEventListener('resize', handleVideoSrc);
+    return () => window.removeEventListener('resize', handleVideoSrc);
+  }, []);
+
   useGSAP(() => {
     gsap.to('.hero-title', {
       delay: 1.5,
