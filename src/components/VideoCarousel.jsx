@@ -207,8 +207,8 @@ const VideoCarousel = () => {
 
         <button className="control-btn">
           <img
-            src={isLastVideo ? replayImg : !isPlaying ? playImg : pauseImg}
-            alt={isLastVideo ? 'replay' : !isPlaying ? 'play' : 'pause'}
+            src={isLastVideo ? replayImg : isPlaying ? pauseImg : playImg}
+            alt={isLastVideo ? 'replay' : isPlaying ? 'pause' : 'play'}
             onClick={
               isLastVideo ? () => handleVideoProcess('video-reset') : () => handleVideoProcess('toggle-play-pause')
             }
