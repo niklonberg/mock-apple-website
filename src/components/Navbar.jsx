@@ -3,7 +3,7 @@ import { navLists } from '../constants';
 
 const Navbar = () => {
   return (
-    <header className="flex w-full items-center justify-between px-5 py-6 sm:px-10">
+    <header className="flex items-center justify-between px-5 py-5 sm:px-10">
       <nav className="screen-max-width flex w-full">
         <img src={appleImg} alt="apple logo" width={24} />
 
