@@ -4,6 +4,9 @@ import React from 'react';
 import ModelView from './ModelView';
 import { yellowImg } from '../utils';
 import * as THREE from 'three';
+import { Canvas } from '@react-three/fiber';
+import { View } from '@react-three/drei';
+import { models, sizes } from '../constants';
 
 const Model = () => {
   const [size, setSize] = React.useState('small');
@@ -40,8 +43,66 @@ const Model = () => {
         </h2>
 
         <div className="mt-5 flex flex-col items-center">
+          {/* model viewers */}
           <div className="relative h-[75vh] overflow-hidden md:h-[90]">
-            <ModelView />
+            <ModelView
+              index={0}
+              groupRef={small}
+              gsapType="view0"
+              controlRef={cameraControlSmall}
+              setRotation={setSmallRotation}
+              item={model}
+              size={size}
+            />
+            <ModelView
+              index={1}
+              groupRef={large}
+              gsapType="view1"
+              controlRef={cameraControlLarge}
+              setRotation={setLargeRotation}
+              item={model}
+              size={size}
+            />
+
+            <Canvas
+              className="h-full w-full"
+              style={{ position: 'fixed', top: 0, bottom: 0, left: 0, right: 0, overflow: 'hidden' }}
+              eventSource={document.getElementById('root')}
+            >
+              <View.Port />
+            </Canvas>
+          </div>
+
+          {/* 3D view controls */}
+          <div className="mx-auto">
+            <p className="mb-4 text-center text-lg font-light">{model.title}</p>
+            <div className="flex-center">
+              <ul className="color-container">
+                {models.map((model, i) => (
+                  <li
+                    key={model.id}
+                    className="mx-2 h-6 w-6 cursor-pointer rounded-full"
+                    style={{ backgroundColor: model.color[0] }}
+                    onClick={() => setModel(model)}
+                  ></li>
+                ))}
+              </ul>
+              <div className="size-btn-container">
+                {sizes.map(({ label, value }) => (
+                  <button
+                    key={label}
+                    className="size-btn text-2xl"
+                    style={{
+                      backgroundColor: size === value ? 'white' : 'transparent',
+                      color: size === value ? 'black' : 'white',
+                    }}
+                    onClick={() => setSize(value)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
