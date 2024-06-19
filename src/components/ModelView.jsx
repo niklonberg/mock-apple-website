@@ -3,6 +3,7 @@ import { OrbitControls, PerspectiveCamera, View } from '@react-three/drei';
 import Lights from './Lights';
 import Model from './iPhoneModel';
 import * as THREE from 'three';
+import ModelLoader from './ModelLoader';
 
 const ModelView = ({ index, groupRef, gsapType, controlRef, setRotation, item, size }) => {
   return (
@@ -26,7 +27,7 @@ const ModelView = ({ index, groupRef, gsapType, controlRef, setRotation, item, s
       />
 
       <group ref={groupRef} name={`${index === 0 ? 'small' : 'large'}`} position={[0, 0, 0]}>
-        <Suspense>
+        <Suspense fallback={<ModelLoader />}>
           <Model scale={index === 0 ? [15, 15, 15] : [17, 17, 17]} item={item} size={size} />
         </Suspense>
       </group>
