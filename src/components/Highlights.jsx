@@ -21,9 +21,9 @@ const Highlights = () => {
     <section id="highlights" className="common-padding h-full overflow-hidden bg-zinc">
       <div className="screen-max-width">
         <div className="mb-12 items-end justify-between md:flex">
-          <h1 id="title" className="section-heading">
+          <h2 id="title" className="section-heading">
             Get the highlights.
-          </h1>
+          </h2>
           <div className="flex flex-wrap items-end gap-4">
             <a className="link">
               Watch the film <img className="ml-2" src={watchImg} alt="" />
