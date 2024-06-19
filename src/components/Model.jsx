@@ -44,7 +44,7 @@ const Model = () => {
 
         <div className="mt-5 flex flex-col items-center">
           {/* model viewers */}
-          <div className="relative h-[75vh] overflow-hidden md:h-[90]">
+          <div className="relative h-[75vh] w-full overflow-hidden md:h-[90]">
             <ModelView
               index={0}
               groupRef={small}
