@@ -6,9 +6,6 @@ import Model from './components/Model';
 import * as Sentry from '@sentry/react';
 
 const App = () => {
-  //eslint-disable-next-line
-  return <button onClick={() => methodDoesNotExist()}>Break the world</button>;
-
   return (
     <main>
       <Navbar />
