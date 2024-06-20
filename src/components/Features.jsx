@@ -2,11 +2,23 @@ import { useGSAP } from '@gsap/react';
 import React from 'react';
 import { animateWithGsap } from '../utils/animations';
 import { explore1Img, explore2Img, exploreVideo } from '../utils';
+import gsap from 'gsap/all';
 
 const Features = () => {
   const videoRef = React.useRef();
 
   useGSAP(() => {
+    gsap.to('#explore-video', {
+      scrollTrigger: {
+        trigger: '#explore-video',
+        toggleActions: 'play pause reverse restart',
+        start: '-10% bottom',
+      },
+      onComplete: () => {
+        videoRef.current.play();
+      },
+    });
+
     animateWithGsap('#features-title', {
       y: 0,
       opacity: 1,
@@ -28,7 +40,7 @@ const Features = () => {
     });
   }, []);
   return (
-    <section className="common-padding relative h-full overflow-hidden bg-zinc">
+    <section className="common-padding relative mb-10 h-full overflow-hidden bg-zinc">
       <div className="screen-max-width">
         <div className="mb-12">
           <h2 id="features-title" className="section-heading">
@@ -74,7 +86,6 @@ const Features = () => {
                 using the same alloy that spacecrafts use for missions to Mars.
               </p>
             </div>
-
             <div className="flex-center flex-1">
               <p className="feature-text g_text">
                 Titanium has one of the best strength-to-weight ratios of any metal, making these our{' '}
@@ -83,15 +94,6 @@ const Features = () => {
               </p>
             </div>
           </div>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolores itaque voluptatibus sequi eos voluptas
-            dolore aliquid voluptates mollitia aspernatur ducimus. Eligendi ipsam culpa soluta veniam beatae. Dicta quos
-            dolorum facere dignissimos! Id doloremque fugit soluta commodi, ipsum sequi molestiae labore. Iste non ad
-            veniam nostrum quibusdam nesciunt officia ullam, ipsa earum numquam, impedit voluptas nisi fuga ex
-            reiciendis possimus quod! Cum placeat, voluptate, non in at est quis vitae, blanditiis eveniet nostrum iure.
-            Eaque natus doloribus molestiae quis porro quidem exercitationem animi fugit distinctio atque ab dolorum
-            adipisci, sit quos, iusto eius pariatur at nobis incidunt iure unde aut dolorem.
-          </p>
         </div>
       </div>
     </section>
