@@ -60,7 +60,7 @@ const Model = () => {
           Take a closer look.
         </h2>
 
-        <div className="mt-5 flex flex-col items-center">
+        <div className="mt-5 flex cursor-move flex-col items-center">
           {/* model viewers */}
           <div className="relative h-[75vh] w-full overflow-hidden md:h-[90]">
             <ModelView
