@@ -29,7 +29,7 @@ const Hero = () => {
       delay: 2,
       duration: 1,
       opacity: 1,
-      y: -100,
+      y: -50,
     });
   }, []);
 
@@ -44,7 +44,7 @@ const Hero = () => {
         </div>
       </div>
 
-      <div id="cta" className="translate-y-30 flex flex-col items-center opacity-0">
+      <div id="cta" className="flex translate-y-20 flex-col items-center opacity-0">
         <a href="#highlights" className="btn">
           Buy
         </a>
