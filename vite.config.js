@@ -10,7 +10,7 @@ export default defineConfig({
     eslint(),
     sentryVitePlugin({
       org: 'jsm-z3',
-      project: 'javascript-react',
+      project: 'mock-apple-website',
     }),
   ],
 
