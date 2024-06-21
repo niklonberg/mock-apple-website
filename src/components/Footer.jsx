@@ -16,7 +16,7 @@ const Footer = () => {
 
         <div className="flex flex-col justify-between md:flex-row md:items-center">
           <p className="text-xs font-semibold text-gray">&copy; Copyright @ 2024 Apple Inc. All rights reserved.</p>
-          <div className="flex">
+          <div className="flex-col">
             {footerLinks.map((link, i) => (
               <a href="" key={link} className="text-xs font-semibold text-gray">
                 {link} {i !== footerLinks.length - 1 && <span className="mx-2"> | </span>}
